@@ -254,7 +254,7 @@ class MyCustomWidget:
         return re.sub(r"(?<!^)(?=[A-Z])", "_", name).lower()
 
     @staticmethod
-    def create_msg_box(title: str, msg: str) -> None:
+    def display_msg_box(title: str, msg: str) -> None:
         """Creates a simple message box."""
         msg_box = QtWidgets.QMessageBox()
         msg_box.setWindowTitle(title)

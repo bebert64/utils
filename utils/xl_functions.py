@@ -15,9 +15,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional, Dict, Iterable, List
 
-import my_types
 import xlwings
-from my_types import Row, Column, CellValue, DataRow, ExcelTable, ColumnFilter, Headers
+from utils.my_types import Row, Column, CellValue, DataRow, ExcelTable, ColumnFilter, Headers
 
 
 class MySheet:
@@ -33,7 +32,7 @@ class MySheet:
 
     def __init__(self, sheet: xlwings.Sheet):
         self.sheet: xlwings.Sheet = sheet
-        self.used_range = MyRange(self.sheet.used_range)
+        self.used_range: MyRange = MyRange(self.sheet.used_range)
 
     def cell(self, row: Row, column: Column) -> xlwings.main.Range:
         """The value from the cell at row 'row' and column 'col'."""
@@ -93,9 +92,6 @@ class MySheet:
             headers_excluded = []
         for header in data_table.headers:
             if header not in headers_excluded:
-                print(f"{column=}")
-                print(f"{header=}")
-                print(f"{data_table[header]}")
                 self.cell(first_row, column).value = header
                 for row in range(len(data_table.rows)):
                     self.cell(first_row + 1 + row, column).value = data_table[header][
@@ -307,10 +303,7 @@ class MyRange:
             headers_included = self.headers
         for header in headers_included:
             column = self.headers.index(header) + 1
-            print(header)
-            print(column)
             data_row[header] = self.cell_value(row, column)
-        print(data_row)
         return data_row
 
     def get_data_table(

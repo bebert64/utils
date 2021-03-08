@@ -6,8 +6,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="utils",  # Replace with your own username
-    version="1.0",
+    name="utils_by_db",
+    version="1.1",
     author="Don Beberto",
     author_email="bebert64@gmail.com",
     description="Various utilities",

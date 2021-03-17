@@ -17,6 +17,7 @@ from typing import Optional, Dict, Iterable, List
 
 import xlwings
 from utils.my_types import Row, Column, CellValue, DataRow, ExcelTable, ColumnFilter, Headers
+from copy import deepcopy
 
 
 class MySheet:
@@ -182,8 +183,14 @@ class DataTable:
             data_row[header] = self[header][row]
         return data_row
 
-    def translate(self, translations: Dict[str, str]) -> DataTable:
-        pass
+    def translate(self, translation: Dict[str, str]) -> None:
+        new_headers = []
+        for header in self.headers:
+            try:
+                new_headers.append(translation[header])
+            except KeyError:
+                new_headers.append(header)
+        self.headers = new_headers
 
 
 class MyRange:
@@ -326,7 +333,7 @@ def get_workbook_opened(name: str) -> Optional[xlwings.Book]:
     """
     workbook_result = None
     for workbook in xlwings.books:
-        if name in workbook.name:
+        if name == workbook.name:
             workbook_result = workbook
     return workbook_result
 

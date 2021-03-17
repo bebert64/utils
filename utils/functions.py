@@ -40,16 +40,18 @@ def _get_frozen_package_path() -> pathlib.Path:
 
 
 def _get_unfrozen_package_path(my_object: Any) -> pathlib.Path:
-    my_object_file_path = _get_my_object_file_path(my_object)
-    sub_package_path = my_object_file_path.parent
-    package_path = sub_package_path.parent
+    my_object_file = _get_my_object_file(my_object)
+    my_object_file_path = pathlib.Path(my_object_file)
+    package_path = my_object_file_path.parent
+    while _is_parent_a_package(package_path):
+        package_path = package_path.parent
     return package_path
 
 
-def _get_my_object_file_path(my_object: Any) -> pathlib.Path:
-    my_object_file = _get_my_object_file(my_object)
-    my_object_file_path = pathlib.Path(my_object_file)
-    return my_object_file_path
+def _is_parent_a_package(package_path: pathlib.Path) -> bool:
+    parent_path = package_path.parent
+    init_file = parent_path / "__init__.py"
+    return init_file.exists()
 
 
 def _get_my_object_file(my_object: Any) -> str:

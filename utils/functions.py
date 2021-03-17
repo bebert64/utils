@@ -18,6 +18,8 @@ def get_package_folder(my_object: Any) -> pathlib.Path:
     """
     The path to the package folder where the my_object is declared.
 
+    The package folder is defined as the highest folder in the folder structure
+    containing an __init__.py file.
     If the package has been bundled in a .exe file, returns the application folder.
     The my_object can be anything : a class, a variable, a function...
 
@@ -73,20 +75,21 @@ def get_data_folder(my_object: Any) -> pathlib.Path:
     --------
     There is a strong assumption made here about where this data folder has to be. In
     the frozen case, we are looking for a sub-folder named "data" inside the folder
-    where the .exe file is located. In the unfrozen case, it is assumed that the
-    objects are always declared in a module in a sub-folder of the source folder,
-    itself a sub-folder of the package general folder, and that this source folder is
-    a sibling of the data folder.
-    In other words, we need to have a structure like :
+    where the .exe file is located. In the unfrozen case, it is assumed that all
+    package and sub-package have an __init__.py file. The data folder must be a
+    sibling to the highest level folder containing an __init__.py file.
     package
-        - data
-        - source_code
-            - app.py
-            - sub-package 1
-                - module 1.1
-                - module 1.2
-            - sub-package 2
-                module 2.1
+        . data
+        . source_code
+            . __init__.py
+            . app.py
+            . sub-package 1
+                . __init__.py
+                . module 1.1
+                . module 1.2
+            . sub-package 2
+                . __init__.py
+                . module 2.1
         etc...
 
     """

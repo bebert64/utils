@@ -88,15 +88,10 @@ def get_data_folder(my_object: Any) -> pathlib.Path:
         etc...
 
     """
-    data_folder = _get_optional_data_folder(my_object)
-    assert data_folder.exists()
-    return data_folder
-
-
-def _get_optional_data_folder(my_object: Any) -> pathlib.Path:
     package_folder = get_package_folder(my_object)
     if _is_application_frozen():
         data_folder = package_folder / "data"
     else:
         data_folder = package_folder.parent / "data"
+    assert data_folder.exists()
     return data_folder

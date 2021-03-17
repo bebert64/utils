@@ -12,7 +12,9 @@ Row = int
 Column = int
 CellValue = Union[int, str, None]
 DataRow = Dict[str, CellValue]
-ExcelTable = xlwings._xlwindows.COMRetryObjectWrapper
+ExcelTable = (
+    xlwings._xlwindows.COMRetryObjectWrapper  # pylint: disable=protected-access
+)
 ColumnFilter = Tuple[int, List[CellValue]]
 Header = str
 Headers = List[str]

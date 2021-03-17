@@ -167,14 +167,13 @@ class MyCustomWidget:
         parent: Optional[QtWidgets.QWidget],
         ui_file: QtCore.QFile,
     ) -> QtWidgets.QWidget:
-        ui_file.open(QtCore.QFile.ReadOnly)
+        ui_file.open(QtCore.QFile.ReadOnly)  # type: ignore
         widget = loader.load(ui_file, parent)
         ui_file.close()
         return widget
 
     @classmethod
     def _get_loader(cls) -> QtUiTools.QUiLoader:
-        """Initializes the class itself by creating the QUiLoader."""
         if not hasattr(cls, "_loader"):
             cls._loader = QtUiTools.QUiLoader()
             cls._loader.registerCustomWidget(cls)

@@ -6,6 +6,9 @@ Defines :
 
 """
 
+
+from __future__ import annotations
+
 import pathlib
 from copy import copy
 from typing import Any, Dict, Optional, Union, List
@@ -58,7 +61,7 @@ class Config(metaclass=MetaConfig):
     def __init__(
         self, toml_path: pathlib.Path, options: Optional[Options] = None
     ) -> None:
-        self.toml_path = toml_path
+        self.toml_path: pathlib.Path = toml_path
         self.options: Optional[Options] = options
         self._reserved_attribute_names: List[str] = []
 

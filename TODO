@@ -1,0 +1,20 @@
+Faire deux classes config
+    une qui se connecte à du toml
+    une à une base de données
+    => transparent pour l'utilisateur
+        si on trouve un fihcier toml : toml
+        si on trouve un .ini : database
+    
+Functions
+    Réfléchir à une meilleure manière de "trouver" le dossier data
+        => gérer les cas où le module ne serait pas forcément dans un sous-module, ou
+        le cas où il y aurait plus d'un niveau
+
+MyCustomWidget
+    Réactiver les Threads, et l'affichage de donneés au fur et à mesure de l'exécution
+    
+xl_functions
+    Revoir le order_table
+    Revoir la gestion des headers 
+        => si je veux le rendre obligatoire, le faire à la création
+        => sinon, gérer tous les cas où ça peut poser problème qu'il n'y en ait pas

@@ -34,8 +34,8 @@ def _is_application_frozen() -> bool:
 
 
 def _get_frozen_package_path() -> pathlib.Path:
-    app_file_path = pathlib.Path(sys.executable)
-    package_path = app_file_path.parent
+    exe_path = pathlib.Path(sys.executable)
+    package_path = exe_path.parent
     return package_path
 
 

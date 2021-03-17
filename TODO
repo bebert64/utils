@@ -4,11 +4,6 @@ Faire deux classes config
     => transparent pour l'utilisateur
         si on trouve un fihcier toml : toml
         si on trouve un .ini : database
-    
-Functions
-    Réfléchir à une meilleure manière de "trouver" le dossier data
-        => gérer les cas où le module ne serait pas forcément dans un sous-module, ou
-        le cas où il y aurait plus d'un niveau
 
 MyCustomWidget
     Réactiver les Threads, et l'affichage de donneés au fur et à mesure de l'exécution

@@ -126,20 +126,21 @@ class MySheet:
             be ordered in descending order. Default is True.
         """
         column = self.get_column(table, header)
-        table.Sort.SortFields.Clear()
-        if ascending:
-            sort_order = 1
-        else:
-            sort_order = 2
+        if column is not None:
+            table.Sort.SortFields.Clear()
+            if ascending:
+                sort_order = 1
+            else:
+                sort_order = 2
 
-        # The Key parameter needs a "real" Excel range (from the API) as value.
-        # Using an "xlwings" range object will raise an error.
-        table.Sort.SortFields.Add(
-            Key=self.sheet.api.Range(column.address), SortOn=0, Order=sort_order
-        )
-        my_types.Header = 1
-        table.Sort.MatchCase = False
-        table.Sort.Apply()
+            # The Key parameter needs a "real" Excel range (from the API) as value.
+            # Using an "xlwings" range object will raise an error.
+            table.Sort.SortFields.Add(
+                Key=self.sheet.api.Range(column.address), SortOn=0, Order=sort_order
+            )
+            table.Header = 1
+            table.Sort.MatchCase = False
+            table.Sort.Apply()
 
     def get_column(
         self, table: ExcelTable, header: str

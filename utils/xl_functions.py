@@ -16,8 +16,16 @@ from pathlib import Path
 from typing import Optional, Dict, Iterable, List
 
 import xlwings
-from utils.my_types import Row, Column, CellValue, DataRow, ExcelTable, ColumnFilter, Headers
-from copy import deepcopy
+
+from utils.my_types import (
+    Row,
+    Column,
+    CellValue,
+    DataRow,
+    ExcelTable,
+    ColumnFilter,
+    Headers,
+)
 
 
 class MySheet:
@@ -167,7 +175,7 @@ class DataTable:
         self.rows: List[List[CellValue]] = []
 
     def add_row(self, data_row: DataRow) -> None:
-        new_row = [None] * len(self.headers)
+        new_row: List[CellValue] = [None] * len(self.headers)
         for header, value in data_row.items():
             column = self.headers.index(header)
             new_row[column] = value

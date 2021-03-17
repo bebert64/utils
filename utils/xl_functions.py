@@ -207,11 +207,11 @@ class MyRange:
         self,
         my_range: xlwings.Range,
         has_headers: bool = True,
-        headers: List[str] = None,
-    ):
+        headers: Optional[List[str]] = None,
+    ) -> None:
         self.range: xlwings.Range = my_range
         if has_headers:
-            self.headers: List[str] = self.get_headers()
+            self.headers: Optional[List[str]] = self.get_headers()
         else:
             self.headers = headers
 

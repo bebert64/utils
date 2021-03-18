@@ -15,8 +15,8 @@ from typing import Any, Dict, Optional, Union, List
 
 import toml
 
-Option = Union[int, str]
-Options = Dict[str, Option]
+ParameterValue = Union[int, str]
+Parameters = Dict[str, ParameterValue]
 
 
 class MetaConfig(type):
@@ -59,10 +59,10 @@ class Config(metaclass=MetaConfig):
     """
 
     def __init__(
-        self, toml_path: pathlib.Path, options: Optional[Options] = None
+        self, toml_path: pathlib.Path, options: Optional[Parameters] = None
     ) -> None:
         self.toml_path: pathlib.Path = toml_path
-        self.options: Optional[Options] = options
+        self.options: Optional[Parameters] = options
         self._reserved_attribute_names: List[str] = []
 
     # By default, mypy complains that the attributes created dynamically by

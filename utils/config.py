@@ -19,7 +19,24 @@ ParameterValue = Union[int, str]
 Parameters = Dict[str, ParameterValue]
 
 
-class Config2:
+class Config:
+
+    @staticmethod
+    def create(config_file: pathlib.Path, options: Optional[Parameters] = None) -> Config:
+        if config_file.suffix == "toml":
+            config = ConfigToml(config_file)
+        elif config_file.suffix in ["ini", "txt"]:
+            config = ConfigDatabase(config_file)
+        else:
+            raise ValueError(
+                f"{config_file} is of type {config_file.suffix}. The only acceptable "
+                f"types are toml, ini, txt."
+            )
+        config.add_options(options)
+
+
+
+class ConfigToml:
     """
     The Config object holds information we need to share among the various objects.
 

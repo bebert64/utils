@@ -19,20 +19,7 @@ ParameterValue = Union[int, str]
 Parameters = Dict[str, ParameterValue]
 
 
-class MetaConfig(type):
-    """
-    The meta class is used to make sure these regular
-    attributes are defined AFTER any specific implementations a derived class might
-    want to do, so that in takes the "new" reserved names into account.
-    """
-
-    def __call__(cls, *args, **kwargs):
-        config_object = type.__call__(cls, *args, **kwargs)
-        config_object.add_regular_attributes()
-        return config_object
-
-
-class Config(metaclass=MetaConfig):
+class Config2:
     """
     The Config object holds information we need to share among the various objects.
 

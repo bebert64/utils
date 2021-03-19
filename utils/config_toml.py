@@ -7,46 +7,36 @@ Defines :
 """
 
 
-import pathlib
-from typing import List, Any
-
 import toml
 
 from utils.config import Config
 
 
 class ConfigToml(Config):
+
     """
-    The Config object holds information we need to share among the various objects.
+    Class derived from Config, specific to information being stored in a .toml file.
 
-    All values from the config.toml file are added as attributes when
-    add_regular_attributes is called. The meta class is used to make sure these regular
-    attributes are defined AFTER any specific implementations a derived class might
-    want to do, so that in takes the "new" reserved names into account.
-
-    Parameters
-    ----------
-    toml_path
-        The path to the toml file.
-    options
-        A dictionary containing additional configuration parameters. If a given
-        parameter has the same name as one from the config.toml file, the new value
-        will superseed the existing one.
-
-    Error
-    -----
-    AttributeError
-        A few names are reserved, and an error will be raised if they are found in
-        the options dictionary.
+    Warning
+    -------
+    The class should not be instantiated directly, but rather through the Config.create
+    factory method, that will return the appropriate derived class (depending on the
+    type of file holding those parameters).
 
     """
 
     def load(self) -> None:
+        """Loads values from the toml file."""
         toml_dict = toml.load(self.config_file)
         for name, value in toml_dict.items():
             self._load_parameter(name, value)
 
-    def save(self):
+    def save(self) -> None:
+        """
+        Saves values to the toml file.
+
+        The method keeps the eventual comments in the original file.
+        """
         new_content = ""
         parameters_saved = []
         with open(self.config_file, "r") as toml_file:
@@ -58,10 +48,13 @@ class ConfigToml(Config):
                     new_line = line
                 else:
                     value = self._translate_value(value)
-                    new_line = f"{parameter_name} = '{value}'\n"
+                    toml_single_value_dict = {parameter_name: value}
+                    new_line = toml.dumps(toml_single_value_dict)
                     parameters_saved.append(parameter_name)
                 new_content += new_line
-            for name, value in [item for item in self.data.items() if not item[0] in parameters_saved]:
+            for name, value in [
+                item for item in self.data.items() if not item[0] in parameters_saved
+            ]:
                 new_line = f"{name} = {value}"
                 new_content += new_line + "\n"
         with open(self.config_file, "w") as toml_file:

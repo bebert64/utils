@@ -105,7 +105,7 @@ def _is_parent_a_package(package_path: pathlib.Path) -> bool:
     return init_file.exists()
 
 
-def _get_my_object_file(my_object: Any) -> str:
+def _get_my_object_file(my_object: Any) -> pathlib.Path:
     my_object_module = inspect.getmodule(my_object)
     assert my_object_module is not None
     my_object_file = my_object_module.__file__

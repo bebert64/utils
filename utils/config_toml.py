@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+
+"""
+Defines :
+ The ConfigToml class, derived from Config
+
+"""
+
+
 import pathlib
 from typing import List, Any
 
@@ -32,35 +41,10 @@ class ConfigToml(Config):
 
     """
 
-    def __init__(self, toml_path: pathlib.Path) -> None:
-        self.toml_path: pathlib.Path = toml_path
-        self._reserved_attribute_names: List[str] = []
-        self.add_regular_attributes()
+    def load_data(self) -> None:
+        toml_dict = toml.load(self.config_file)
+        for name, value in toml_dict.items():
+            self._load_parameter(name, value)
 
-    # By default, mypy complains that the attributes created dynamically by
-    # the _add_attributes_from_toml_file method do not exist.
-    # redefining __getattr__ with types makes mypy stop complaining.
-    def __getattr__(self, name: str) -> Any:
-        try:
-            getattr(super(), name)
-        except AttributeError as error:
-            raise AttributeError(
-                f"Parameter {name} has not been found in the config.toml file."
-            ) from error
-
-    def add_regular_attributes(self) -> None:
-        """
-        Adds attributes from the toml file and from the options.
-
-        If there is need to reserve attribute names (in a derived class for example),
-        this function should be called after such attributes are defined.
-
-        """
-        self._set_reserved_attribute_names()
-        self._add_attributes_from_toml_file()
-        # self._add_attributes_from_options()
-
-    def _add_attributes_from_toml_file(self) -> None:
-        toml_dict = toml.load(self.toml_path)
-        for attribute_name, attribute_value in toml_dict.items():
-            self._add_attribute(attribute_name, attribute_value)
+    def save_data(self):
+        pass

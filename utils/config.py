@@ -10,9 +10,7 @@ Defines :
 from __future__ import annotations
 
 import pathlib
-from copy import copy
-from typing import Any, Dict, Optional, Union
-
+from typing import Dict, Optional, Union
 
 ParameterValue = Union[int, str]
 Parameters = Dict[str, ParameterValue]
@@ -20,10 +18,22 @@ Parameters = Dict[str, ParameterValue]
 
 class Config:
 
+    def __init__(self, config_file: pathlib.Path):
+        self.data = {}
+        self.config_file = config_file
+
     @staticmethod
     def create(
         config_file: pathlib.Path, options: Optional[Parameters] = None
     ) -> Config:
+        config = Config._create_config_object(config_file)
+        assert hasattr(config, "load_data")
+        config.load_data()
+        config.load_options(options)
+        return config
+
+    @staticmethod
+    def _create_config_object(config_file):
         if config_file.suffix == ".toml":
             from utils.config_toml import ConfigToml
             config = ConfigToml(config_file)
@@ -35,35 +45,21 @@ class Config:
                 f"{config_file} is of type {config_file.suffix}. The only acceptable "
                 f"types are toml, ini, txt."
             )
-        config.add_options(options)
         return config
 
-    def _set_reserved_attribute_names(self):
-        # To include all reserved names, must be run JUST BEFORE _add_attributes
-        self._reserved_attribute_names = copy(list(self.__dict__.keys()))
+    def __getitem__(self, item):
+        return self.data[item]
 
-    def add_options(self, options: Optional[Parameters]) -> None:
+    def __setitem__(self, item, value):
+        self.data[item] = value
+
+    def load_options(self, options: Optional[Parameters]) -> None:
         if options is not None:
-            for attribute_name, attribute_value in options.items():
-                self._add_attribute(attribute_name, attribute_value)
+            for item, value in options.items():
+                self[item] = value
 
-    def _add_attribute(self, attribute_name: str, attribute_value: Any) -> None:
-        is_attribute_reserved = self._is_attribute_reserved(attribute_name)
-        if is_attribute_reserved:
-            self._raise_attribute_exists_error(attribute_name)
-        setattr(self, attribute_name, attribute_value)
-
-    def _is_attribute_reserved(self, attribute_name: str) -> bool:
-        return attribute_name in self._reserved_attribute_names
-
-    def _raise_attribute_exists_error(self, attribute_name: str) -> None:
-        error_message = f"""
-The attribute name "{attribute_name}" is reserved by the config file, and cannot be
-given to any attribute from the config.toml file. Please rename it before restarting
-the application."""
-        error_message_formatted = self._format_error_message(error_message)
-        raise AttributeError(error_message_formatted)
-
-    @staticmethod
-    def _format_error_message(error_message: str) -> str:
-        return error_message.replace("\n", " ").strip()
+    def _load_parameter(self, name, value):
+        if isinstance(value, str) and value.startswith("PathObject:"):
+            path_as_string = value[len("PathObject:"):]
+            value = pathlib.Path(path_as_string)
+        self[name] = value

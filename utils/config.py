@@ -27,8 +27,8 @@ class Config:
         config_file: pathlib.Path, options: Optional[Parameters] = None
     ) -> Config:
         config = Config._create_config_object(config_file)
-        assert hasattr(config, "load_data")
-        config.load_data()
+        assert hasattr(config, "load")
+        config.load()
         config.load_options(options)
         return config
 

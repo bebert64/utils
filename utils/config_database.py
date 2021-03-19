@@ -37,12 +37,12 @@ class ConfigDatabase(Config):
             )
         return database
 
-    def load_data(self):
+    def load(self):
         for parameter in Parameter.select():
             json_value = json.loads(parameter.value)
             self._load_parameter(parameter.name, json_value)
 
-    def save_data(self) -> None:
+    def save(self) -> None:
         for name, value in self.data.items():
             parameter = Parameter.get_or_create(name=name)[0]
             if isinstance(value, pathlib.Path):

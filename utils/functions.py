@@ -44,7 +44,7 @@ def get_data_folder(my_object: Any = None) -> pathlib.Path:
         etc...
 
     """
-    package_folder = _get_package_folder(my_object)
+    package_folder = get_package_folder(my_object)
     if _is_application_frozen():
         data_folder = package_folder / "data"
     else:
@@ -53,7 +53,7 @@ def get_data_folder(my_object: Any = None) -> pathlib.Path:
     return data_folder
 
 
-def _get_package_folder(my_object: Any = None) -> pathlib.Path:
+def get_package_folder(my_object: Any = None) -> pathlib.Path:
     """
     The path to the package folder where the my_object is declared.
 

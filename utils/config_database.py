@@ -45,10 +45,10 @@ class ConfigDatabase(Config):
     def save(self) -> None:
         for name, value in self.data.items():
             parameter = Parameter.get_or_create(name=name)[0]
-            if isinstance(value, pathlib.Path):
-                value = "PathObject:" + str(value)
+            value = self._translate_value(value)
             parameter.value = json.dumps(value)
             try:
                 parameter.save(force_insert=True)
             except peewee.IntegrityError:
                 parameter.save()
+

@@ -63,3 +63,9 @@ class Config:
             path_as_string = value[len("PathObject:"):]
             value = pathlib.Path(path_as_string)
         self[name] = value
+
+    @staticmethod
+    def _translate_value(value):
+        if isinstance(value, pathlib.Path):
+            value = "PathObject:" + str(value)
+        return value

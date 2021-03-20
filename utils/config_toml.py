@@ -5,7 +5,7 @@ Defines :
  The ConfigToml class, derived from Config
 
 """
-
+from typing import List
 
 import toml
 
@@ -42,11 +42,10 @@ class ConfigToml(Config):
 
 
 class _TomlWriter:
-
     def __init__(self, config_toml: ConfigToml) -> None:
         self.config_toml: ConfigToml = config_toml
         self.new_content: str = ""
-        self.parameters_saved = []
+        self.parameters_saved: List[str] = []
         self.data = self.config_toml.data
 
     def save(self) -> None:

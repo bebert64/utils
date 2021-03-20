@@ -23,7 +23,6 @@ class Parameter(peewee.Model):
     description: str = peewee.CharField()
     group: str = peewee.CharField()
 
-
 class ConfigDatabase(Config):
 
     """
@@ -62,7 +61,4 @@ class ConfigDatabase(Config):
             parameter = Parameter.get_or_create(name=name)[0]
             value = self._translate_value(value)
             parameter.value = json.dumps(value)
-            try:
-                parameter.save(force_insert=True)
-            except peewee.IntegrityError:
-                parameter.save()
+            parameter.save()

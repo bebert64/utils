@@ -10,10 +10,7 @@ fail-under=10.0
 
 # Add files or directories to the blacklist. They should be base names, not
 # paths.
-ignore=CVS,
-      database.py,
-      manage_db.py,
-      sphinx_examples.py
+ignore=
 
 # Add files or directories matching the regex patterns to the blacklist. The
 # regex matches against base names, not paths.
@@ -65,6 +62,7 @@ confidence=
 # --disable=W".
 disable=unsubscriptable-object,
         cyclic-import,
+        too-few-public-methods
         # missing-function-docstring, missing-module-docstring, missing-class-docstring,
         # import-outside-toplevel,
         

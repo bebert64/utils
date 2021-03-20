@@ -27,7 +27,8 @@ class Parameter(peewee.Model):
 class ConfigDatabase(Config):
 
     """
-    Class derived from Config, specific to information being stored in a .toml file.
+    Class derived from Config, specific to information being stored in an sqlite
+    database.
 
     Warning
     -------

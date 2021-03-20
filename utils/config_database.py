@@ -60,6 +60,6 @@ class ConfigDatabase(Config):
         """Saves values to the sqlite database."""
         for name, value in self.data.items():
             parameter = Parameter.get_or_create(name=name)[0]
-            value = self._translate_value(value)
+            value = self.translate_value(value)
             parameter.value = json.dumps(value)
             parameter.save()

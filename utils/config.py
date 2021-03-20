@@ -109,7 +109,16 @@ class Config:
         self[name] = value
 
     @staticmethod
-    def _translate_value(value: ParameterValue) -> ParameterValue:
+    def translate_value(value: ParameterValue) -> ParameterValue:
+        """
+        Transforms a pathlib.Path object in a string.
+
+        The way the string is formed, with a specific prefix, allows to keep the
+        information that this value is meant to represent a path. This way, the
+        parameter can directly be retrieved as a Path object when the value is read
+        from wherever it is stored.
+
+        """
         if isinstance(value, pathlib.Path):
             value = "PathObject:" + str(value)
         return value

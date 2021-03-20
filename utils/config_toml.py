@@ -37,25 +37,64 @@ class ConfigToml(Config):
 
         The method keeps the eventual comments in the original file.
         """
-        new_content = ""
-        parameters_saved = []
-        with open(self.config_file, "r") as toml_file:
+        toml_writer = _TomlWriter(self)
+        toml_writer.save()
+
+
+class _TomlWriter:
+
+    def __init__(self, config_toml: ConfigToml) -> None:
+        self.config_toml: ConfigToml = config_toml
+        self.new_content: str = ""
+        self.parameters_saved = []
+        self.data = self.config_toml.data
+
+    def save(self) -> None:
+        # public method from private class, not documented
+        # pylint: disable=missing-function-docstring
+        self._reset()
+        self._read()
+        self._write()
+
+    def _read(self) -> None:
+        self._transform_existing_lines()
+        self._add_new_lines()
+
+    def _transform_existing_lines(self):
+        with open(self.config_toml.config_file, "r") as toml_file:
             for line in toml_file.readlines():
-                parameter_name = line.split(" ")[0]
-                try:
-                    value = self[parameter_name]
-                except KeyError:
-                    new_line = line
-                else:
-                    value = self._translate_value(value)
-                    toml_single_value_dict = {parameter_name: value}
-                    new_line = toml.dumps(toml_single_value_dict)
-                    parameters_saved.append(parameter_name)
-                new_content += new_line
-            for name, value in [
-                item for item in self.data.items() if not item[0] in parameters_saved
-            ]:
-                new_line = f"{name} = {value}"
-                new_content += new_line + "\n"
-        with open(self.config_file, "w") as toml_file:
-            toml_file.write(new_content)
+                new_line = self._transform_line(line)
+                self.new_content += new_line
+
+    def _transform_line(self, line):
+        key = line.split(" ")[0]
+        try:
+            value = self.data[key]
+        except KeyError:
+            new_line = line
+        else:
+            new_line = self._translate_value_toml(key, value)
+            self.parameters_saved.append(key)
+        return new_line
+
+    def _add_new_lines(self):
+        for key in [
+            key for key in self.data.keys() if key not in self.parameters_saved
+        ]:
+            value = self.data[key]
+            new_line = self._translate_value_toml(key, value)
+            self.new_content += new_line
+
+    def _translate_value_toml(self, key, value):
+        value = self.config_toml.translate_value(value)
+        toml_single_value_dict = {key: value}
+        new_line = toml.dumps(toml_single_value_dict)
+        return new_line
+
+    def _write(self):
+        with open(self.config_toml.config_file, "w") as toml_file:
+            toml_file.write(self.new_content)
+
+    def _reset(self):
+        self.new_content = ""
+        self.parameters_saved = []

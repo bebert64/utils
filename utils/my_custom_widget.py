@@ -117,7 +117,7 @@ class MyCustomWidget:
     @classmethod
     def create_widget(
         cls, parent: Optional[QtWidgets.QWidget] = None
-    ) -> MyCustomWidgetMixin:
+    ) -> MyCustomWidget:
         """
         Creates a widget based on the .ui file ui_file_name.
 
@@ -261,8 +261,8 @@ class MyCustomWidget:
         msg_box.exec_()
 
 
-class MyCustomWidgetMixin(QtWidgets.QWidget, MyCustomWidget):
-    """Class defined ony for type checking the return value of create_widget."""
+# class MyCustomWidgetMixin(QtWidgets.QWidget, MyCustomWidget):
+#     """Class defined only for type checking the return value of create_widget."""
 
 
 #     def set_msg_box_message(self, msg: str):

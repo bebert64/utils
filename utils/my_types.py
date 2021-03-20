@@ -1,6 +1,27 @@
 # -*- coding: utf-8 -*-
 
-"""Defines types commonly used."""
+"""
+Defines types commonly used.
+
+ Row: int
+
+ Column: int
+
+ CellValue: int, str, or None
+
+ DataRow: Dict[str, CellValue]. A row of data in an Excel table
+
+ ExcelTable: the "real" Excel object, returned by the Win32 api.
+
+ ColumnFilter: a tuple of a column number and a list of CellValue
+
+ Header: str
+
+ Headers: a list of Header
+
+ Pixel: int
+
+"""
 
 
 from typing import Union, Dict, Tuple, List
@@ -11,10 +32,11 @@ import xlwings
 Row = int
 Column = int
 CellValue = Union[int, str, None]
-DataRow = Dict[str, CellValue]
+ColumnFilter = Tuple[Column, List[CellValue]]
+Header = str
+Headers = List[Header]
+DataRow = Dict[Header, CellValue]
 ExcelTable = (
     xlwings._xlwindows.COMRetryObjectWrapper  # pylint: disable=protected-access
 )
-ColumnFilter = Tuple[int, List[CellValue]]
-Header = str
-Headers = List[str]
+Pixel = int

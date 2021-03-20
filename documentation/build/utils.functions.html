@@ -1,23 +1,31 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>functions &mdash; Galery 1.0 documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -28,10 +36,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="my_custom_widget" href="utils.my_custom_widget.html" />
@@ -72,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -96,6 +101,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -130,11 +136,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="utils.html">utils</a> &raquo;</li>
         
@@ -143,7 +151,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/utils.functions.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -166,40 +174,13 @@
 </dl>
 <dl class="py function">
 <dt id="utils.functions.get_data_folder">
-<code class="sig-name descname">get_data_folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">my_object</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.functions.get_data_folder" title="Permalink to this definition">¶</a></dt>
-<dd><p>The path to the data folder for the package where my_object is declared.</p>
-<p>If the package has been bundled in a .exe file, returns the data folder of the
-application folder.
-The my_object can be anything : a class, a variable, a function…</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>There is a strong assumption made here about where this data folder has to be. In
-the frozen case, we are looking for a sub-folder named “data” inside the folder
-where the .exe file is located. In the unfrozen case, it is assumed that all
-package and sub-package have an __init__.py file. The data folder must be a
-sibling to the highest level folder containing an __init__.py file.
-package</p>
-<blockquote>
-<div><p>. data
-. source_code</p>
-<blockquote>
-<div><p>. __init__.py
-. app.py
-. sub-package 1</p>
-<blockquote>
-<div><p>. __init__.py
-. module 1.1
-. module 1.2</p>
-</div></blockquote>
-<dl class="simple">
-<dt>. sub-package 2</dt><dd><p>. __init__.py
-. module 2.1</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>etc…</p>
-</div></blockquote>
-</div>
+<code class="sig-name descname"><span class="pre">get_data_folder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_object</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.functions.get_data_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>The path to the data folder for my_object.</p>
+<p>The data folder is defined as a “sibling” folder (named “data”) to the package
+folder where my_object is defined. More information is available in the
+get_package_folder documentation.
+If no my_object is passed, returns the data folder for the package from where
+the function is called.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></p>
@@ -212,12 +193,64 @@ package</p>
 
 <dl class="py function">
 <dt id="utils.functions.get_package_folder">
-<code class="sig-name descname">get_package_folder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">my_object</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.functions.get_package_folder" title="Permalink to this definition">¶</a></dt>
-<dd><p>The path to the package folder where the my_object is declared.</p>
-<p>The package folder is defined as the highest folder in the folder structure
-containing an __init__.py file.
-If the package has been bundled in a .exe file, returns the application folder.
-The my_object can be anything : a class, a variable, a function…</p>
+<code class="sig-name descname"><span class="pre">get_package_folder</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_object</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.functions.get_package_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>The path to the package folder from where the function is called, or where
+my_object is declared.</p>
+<p>If the package has been bundled in a .exe file, returns the data folder of the
+application itself. Otherwise, the package folder is defined as the highest folder
+in the folder structure containing an __init__.py file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>my_object</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]) – If needed, one can pass as an argument an object defined in an imported module
+or package. The package folder returned will then be the one from the package
+where my_object is defined, which will be different to the one from where the
+function is called.
+my_object can be anything : a class, a variable, a function…</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.9)">pathlib.Path</a></p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>There is a strong assumption about the code structure. In the unfrozen case, it is
+assumed that all package and sub-package have an __init__.py file.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>package</dt><dd><ul>
+<li><p>data</p></li>
+<li><dl class="simple">
+<dt>source_code</dt><dd><ul>
+<li><p>__init__.py</p></li>
+<li><p>app.py</p></li>
+<li><dl class="simple">
+<dt>sub-package 1</dt><dd><ul>
+<li><p>__init__.py</p></li>
+<li><p>module 1.1</p></li>
+<li><p>module 1.2</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>sub-package 2</dt><dd><ul>
+<li><p>__init__.py</p></li>
+<li><p>module 2.1</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>In this example, the package folder is “source_code”.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></a></p>
@@ -235,20 +268,25 @@ The my_object can be anything : a class, a variable, a function…</p>
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Don Beberto
+        &#169; Copyright 2020, Don Beberto.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -256,7 +294,6 @@ The my_object can be anything : a class, a variable, a function…</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

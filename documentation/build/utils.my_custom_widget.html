@@ -1,23 +1,31 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>my_custom_widget &mdash; Galery 1.0 documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -28,10 +36,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="my_types" href="utils.my_types.html" />
@@ -72,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -96,6 +101,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -130,11 +136,13 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="utils.html">utils</a> &raquo;</li>
         
@@ -143,7 +151,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/utils.my_custom_widget.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -166,30 +174,23 @@ class must also inherit from a QtWidgets.QWidget.</p>
 </dl>
 <dl class="py class">
 <dt id="utils.my_custom_widget.MyCustomWidget">
-<em class="property">class </em><code class="sig-name descname">MyCustomWidget</code><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">MyCustomWidget</span></code><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget" title="Permalink to this definition">¶</a></dt>
 <dd><p>A convenience class to create QT object from .ui files.</p>
 <p>MyCustomWidget is meant to be inherited, and cannot be used by itself. The derived
 class must also inherit from a QtWidgets.QWidget. When a widget is created with
 create_widget, if its parent has the attribute MyTag, it will be passe to
 the widget, along MyObject and MyObjectTag.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Class Attributes</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#utils.my_custom_widget.MyCustomWidget.ui_file_name" title="utils.my_custom_widget.MyCustomWidget.ui_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ui_file_name</span></code></a></p></li>
-<li><p><a class="reference internal" href="#utils.my_custom_widget.MyCustomWidget.ui_folder_path" title="utils.my_custom_widget.MyCustomWidget.ui_folder_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ui_folder_path</span></code></a></p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyTag</span></code></p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyObject</span></code></p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MyObjectTag</span></code></p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_gallery</span></code></p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Class</span> <span class="pre">Methods</span></code></p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">-------------</span></code></p></li>
-<li><p><a class="reference internal" href="#utils.my_custom_widget.MyCustomWidget.create_widget" title="utils.my_custom_widget.MyCustomWidget.create_widget"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_widget</span></code></a></p></li>
-</ul>
-</dd>
-</dl>
+<p class="rubric">Class Attributes</p>
+<p>ui_file_name
+ui_folder_path
+MyTag
+MyObject
+MyObjectTag
+config_gallery</p>
+<p>create_widget</p>
 <dl class="py attribute">
 <dt id="utils.my_custom_widget.MyCustomWidget.ui_file_name">
-<code class="sig-name descname">ui_file_name</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></em><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.ui_file_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">ui_file_name</span></code><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></em><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.ui_file_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The name of the gui file to use. If ui_file_name is not initialized by the
 derived class, the loader will try to read from a .ui file with the same
 base name as the class itself, converted from CamelCase to snake_case.
@@ -198,7 +199,7 @@ Ex: for MainWidget, the loader will try to load main_widget.ui.</p>
 
 <dl class="py attribute">
 <dt id="utils.my_custom_widget.MyCustomWidget.ui_folder_path">
-<code class="sig-name descname">ui_folder_path</code><em class="property">: <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.9)">pathlib.Path</a></em><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.ui_folder_path" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">ui_folder_path</span></code><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.9)"><span class="pre">pathlib.Path</span></a></em><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.ui_folder_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>The path to the folder in which to find the .ui files. If not provided by the
 derived class, the “ui_files” sub-folder of the folder where the class is being
 defined will be used.</p>
@@ -206,12 +207,12 @@ defined will be used.</p>
 
 <dl class="py attribute">
 <dt id="utils.my_custom_widget.MyCustomWidget.config">
-<code class="sig-name descname">config</code><em class="property">: Optional<span class="p">[</span><a class="reference internal" href="utils.config.html#utils.config.Config" title="utils.config.Config">utils.config.Config</a><span class="p">]</span></em><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.config" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">config</span></code><em class="property"><span class="pre">:</span> <span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="utils.config.html#utils.config.Config" title="utils.config.Config"><span class="pre">utils.config.Config</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.config" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="utils.my_custom_widget.MyCustomWidget.create_widget">
-<em class="property">classmethod </em><code class="sig-name descname">create_widget</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.create_widget" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">create_widget</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.create_widget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a widget based on the .ui file ui_file_name.</p>
 <p>If arguments need to be passed when constructing the derived class, the good
 practice is to define a create_specific_widget in the derived class, itself
@@ -225,14 +226,14 @@ classing super().create_widget()</p>
 and QtWidgets.QWidget.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#utils.my_custom_widget.MyCustomWidgetMixin" title="utils.my_custom_widget.MyCustomWidgetMixin">MyCustomWidgetMixin</a></p>
+<dd class="field-odd"><p>MyCustomWidgetMixin</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="utils.my_custom_widget.MyCustomWidget.get_ancestor_by_class">
-<code class="sig-name descname">get_ancestor_by_class</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ancestor_class</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.get_ancestor_by_class" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_ancestor_by_class</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ancestor_class</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.get_ancestor_by_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the closest ancestor of the given class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -250,7 +251,7 @@ returned.</p>
 
 <dl class="py method">
 <dt id="utils.my_custom_widget.MyCustomWidget.get_main_window">
-<code class="sig-name descname">get_main_window</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.get_main_window" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">get_main_window</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.get_main_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the closest <a class="reference external" href="https://doc.qt.io/qtforpython/PySide2/QtWidgets/QMainWindow.html" title="(in PySide v5.15.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></a> (there should be only one).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -261,7 +262,7 @@ returned.</p>
 
 <dl class="py method">
 <dt id="utils.my_custom_widget.MyCustomWidget.display_msg_box">
-<em class="property">static </em><code class="sig-name descname">display_msg_box</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">title</span></em>, <em class="sig-param"><span class="n">msg</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.display_msg_box" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">display_msg_box</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidget.display_msg_box" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a simple message box.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -278,30 +279,6 @@ returned.</p>
 
 </dd></dl>
 
-<dl class="py class">
-<dt id="utils.my_custom_widget.MyCustomWidgetMixin">
-<em class="property">class </em><code class="sig-name descname">MyCustomWidgetMixin</code><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidgetMixin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PySide6.QtWidgets.QWidget</span></code>, <a class="reference internal" href="#utils.my_custom_widget.MyCustomWidget" title="utils.my_custom_widget.MyCustomWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">utils.my_custom_widget.MyCustomWidget</span></code></a></p>
-<p>Class defined ony for type checking the return value of create_widget.</p>
-<dl class="py attribute">
-<dt id="utils.my_custom_widget.MyCustomWidgetMixin.ui_file_name">
-<code class="sig-name descname">ui_file_name</code><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidgetMixin.ui_file_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>The name of the gui file to use. If ui_file_name is not initialized by the
-derived class, the loader will try to read from a .ui file with the same
-base name as the class itself, converted from CamelCase to snake_case.
-Ex: for MainWidget, the loader will try to load main_widget.ui.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="utils.my_custom_widget.MyCustomWidgetMixin.ui_folder_path">
-<code class="sig-name descname">ui_folder_path</code><a class="headerlink" href="#utils.my_custom_widget.MyCustomWidgetMixin.ui_folder_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>The path to the folder in which to find the .ui files. If not provided by the
-derived class, the “ui_files” sub-folder of the folder where the class is being
-defined will be used.</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -309,20 +286,25 @@ defined will be used.</p>
            
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Don Beberto
+        &#169; Copyright 2020, Don Beberto.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -330,7 +312,6 @@ defined will be used.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

@@ -23,6 +23,7 @@ class Parameter(peewee.Model):
     description: str = peewee.CharField()
     group: str = peewee.CharField()
 
+
 class ConfigDatabase(Config):
 
     """

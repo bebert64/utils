@@ -10,115 +10,115 @@ Defines :
 from __future__ import annotations
 
 import pathlib
-from copy import copy
-from typing import Any, Dict, Optional, Union, List
-
-import toml
+from typing import Dict, Optional, Union, Any
 
 ParameterValue = Union[int, str]
 Parameters = Dict[str, ParameterValue]
 
 
-class MetaConfig(type):
+class Config:
+
     """
-    The meta class is used to make sure these regular
-    attributes are defined AFTER any specific implementations a derived class might
-    want to do, so that in takes the "new" reserved names into account.
-    """
+    The Config class holds parameters' values that can be shared between all modules.
 
-    def __call__(cls, *args, **kwargs):
-        config_object = type.__call__(cls, *args, **kwargs)
-        config_object.add_regular_attributes()
-        return config_object
+    The types that can be stored and retrieved are str, int, pathlib.Path and array
+    of a single type.
+    Values are accessed with the bracket notation (config[parameter_name]).
 
-
-class Config(metaclass=MetaConfig):
-    """
-    The Config object holds information we need to share among the various objects.
-
-    All values from the config.toml file are added as attributes when
-    add_regular_attributes is called. The meta class is used to make sure these regular
-    attributes are defined AFTER any specific implementations a derived class might
-    want to do, so that in takes the "new" reserved names into account.
-
-    Parameters
-    ----------
-    toml_path
-        The path to the toml file.
-    options
-        A dictionary containing additional configuration parameters. If a given
-        parameter has the same name as one from the config.toml file, the new value
-        will superseed the existing one.
-
-    Error
-    -----
-    AttributeError
-        A few names are reserved, and an error will be raised if they are found in
-        the options dictionary.
+    Warning
+    -------
+    The class should not be instantiated directly, but rather through the Config.create
+    factory method, that will return the appropriate derived class (depending on the
+    type of file holding those parameters).
 
     """
 
-    def __init__(
-        self, toml_path: pathlib.Path, options: Optional[Parameters] = None
-    ) -> None:
-        self.toml_path: pathlib.Path = toml_path
-        self.options: Optional[Parameters] = options
-        self._reserved_attribute_names: List[str] = []
-
-    # By default, mypy complains that the attributes created dynamically by
-    # the _add_attributes_from_toml_file method do not exist.
-    # redefining __getattr__ with types makes mypy stop complaining.
-    def __getattr__(self, name: str) -> Any:
-        try:
-            getattr(super(), name)
-        except AttributeError as error:
-            raise AttributeError(
-                f"Parameter {name} has not been found in the config.toml file."
-            ) from error
-
-    def add_regular_attributes(self) -> None:
-        """
-        Adds attributes from the toml file and from the options.
-
-        If there is need to reserve attribute names (in a derived class for example),
-        this function should be called after such attributes are defined.
-
-        """
-        self._get_reserved_attribute_names()
-        self._add_attributes_from_toml_file()
-        self._add_attributes_from_options()
-
-    def _get_reserved_attribute_names(self) -> List[str]:
-        # To include all reserved names, must be run JUST BEFORE _add_attributes
-        return copy(list(self.__dict__.keys()))
-
-    def _add_attributes_from_toml_file(self) -> None:
-        toml_dict = toml.load(self.toml_path)
-        for attribute_name, attribute_value in toml_dict.items():
-            self._add_attribute(attribute_name, attribute_value)
-
-    def _add_attributes_from_options(self) -> None:
-        if self.options is not None:
-            for attribute_name, attribute_value in self.options.items():
-                self._add_attribute(attribute_name, attribute_value)
-
-    def _add_attribute(self, attribute_name: str, attribute_value: Any) -> None:
-        is_attribute_reserved = self._is_attribute_reserved(attribute_name)
-        if is_attribute_reserved:
-            self._raise_attribute_exists_error(attribute_name)
-        setattr(self, attribute_name, attribute_value)
-
-    def _is_attribute_reserved(self, attribute_name: str) -> bool:
-        return attribute_name in self._reserved_attribute_names
-
-    def _raise_attribute_exists_error(self, attribute_name: str) -> None:
-        error_message = f"""
-The attribute name "{attribute_name}" is reserved by the config file, and cannot be
-given to any attribute from the config.toml file. Please rename it before restarting
-the application."""
-        error_message_formatted = self._format_error_message(error_message)
-        raise AttributeError(error_message_formatted)
+    def __init__(self, config_file: pathlib.Path) -> None:
+        self.data: Parameters = {}
+        self.config_file = config_file
 
     @staticmethod
-    def _format_error_message(error_message: str) -> str:
-        return error_message.replace("\n", " ").strip()
+    def create(
+        config_file: pathlib.Path, options: Optional[Parameters] = None
+    ) -> Config:
+        """
+        Factory method to create a config object.
+
+        Depending on the extension of the file given as input, the appropriate
+        derived class will be called. Two options are available : either the values can
+        be stored in a toml file, or they are stored in a sqlite database. In that
+        second case, all values should be in a table named "Parameter", with columns
+        "name", "value", "description" and "group".
+
+        Parameters
+        ----------
+        config_file:
+            The file holding the main information. That file can either be a toml file,
+            directly holding the parameter values, or a .txt or .ini file, with a
+            single line holding the path to a sqlite database.
+        options:
+            A dictionary can be given at creation, with values meant to override
+            existing default values, or with entirely new parameters not present in the
+            default parameters.
+
+        """
+        # create_main_widget is a factory method, and should therefore be allowed
+        # to access protected members of the class.
+        # pylint: disable = protected-access
+        config = Config._create_config_object(config_file)
+        assert hasattr(config, "load")
+        config.load()  # type: ignore
+        config._load_options(options)
+        return config
+
+    @staticmethod
+    def _create_config_object(config_file: pathlib.Path) -> Config:
+        # We only import the appropriate subclass, because they each have specific
+        # dependencies.
+        # pylint: disable = import-outside-toplevel
+        if config_file.suffix == ".toml":
+            from utils.config_toml import ConfigToml
+
+            config: Config = ConfigToml(config_file)
+        elif config_file.suffix in [".ini", ".txt"]:
+            from utils.config_database import ConfigDatabase
+
+            config = ConfigDatabase(config_file)
+        else:
+            raise ValueError(
+                f"{config_file} is of type {config_file.suffix}. The only acceptable "
+                f"types are toml, ini, txt."
+            )
+        return config
+
+    def __getitem__(self, item: str) -> Any:
+        return self.data[item]
+
+    def __setitem__(self, item: str, value: Any) -> None:
+        self.data[item] = value
+
+    def _load_options(self, options: Optional[Parameters]) -> None:
+        if options is not None:
+            for item, value in options.items():
+                self[item] = value
+
+    def _load_parameter(self, name: str, value: Any) -> None:
+        if isinstance(value, str) and value.startswith("PathObject:"):
+            path_as_string = value[len("PathObject:") :]
+            value = pathlib.Path(path_as_string)
+        self[name] = value
+
+    @staticmethod
+    def translate_value(value: ParameterValue) -> ParameterValue:
+        """
+        Transforms a pathlib.Path object in a string.
+
+        The way the string is formed, with a specific prefix, allows to keep the
+        information that this value is meant to represent a path. This way, the
+        parameter can directly be retrieved as a Path object when the value is read
+        from wherever it is stored.
+
+        """
+        if isinstance(value, pathlib.Path):
+            value = "PathObject:" + str(value)
+        return value

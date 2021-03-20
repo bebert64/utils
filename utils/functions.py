@@ -14,56 +14,7 @@ import sys
 from typing import Any
 
 
-def get_package_folder(my_object: Any) -> pathlib.Path:
-    """
-    The path to the package folder where the my_object is declared.
-
-    The package folder is defined as the highest folder in the folder structure
-    containing an __init__.py file.
-    If the package has been bundled in a .exe file, returns the application folder.
-    The my_object can be anything : a class, a variable, a function...
-
-    """
-    if _is_application_frozen():
-        package_path = _get_frozen_package_path()
-    else:
-        package_path = _get_unfrozen_package_path(my_object)
-    return package_path
-
-
-def _is_application_frozen() -> bool:
-    return getattr(sys, "frozen", False)
-
-
-def _get_frozen_package_path() -> pathlib.Path:
-    exe_path = pathlib.Path(sys.executable)
-    package_path = exe_path.parent
-    return package_path
-
-
-def _get_unfrozen_package_path(my_object: Any) -> pathlib.Path:
-    my_object_file = _get_my_object_file(my_object)
-    my_object_file_path = pathlib.Path(my_object_file)
-    package_path = my_object_file_path.parent
-    while _is_parent_a_package(package_path):
-        package_path = package_path.parent
-    return package_path
-
-
-def _is_parent_a_package(package_path: pathlib.Path) -> bool:
-    parent_path = package_path.parent
-    init_file = parent_path / "__init__.py"
-    return init_file.exists()
-
-
-def _get_my_object_file(my_object: Any) -> str:
-    my_object_module = inspect.getmodule(my_object)
-    assert my_object_module is not None
-    my_object_file = my_object_module.__file__
-    return my_object_file
-
-
-def get_data_folder(my_object: Any) -> pathlib.Path:
+def get_data_folder(my_object: Any = None) -> pathlib.Path:
     """
     The path to the data folder for the package where my_object is declared.
 
@@ -100,3 +51,64 @@ def get_data_folder(my_object: Any) -> pathlib.Path:
         data_folder = package_folder.parent / "data"
     assert data_folder.exists()
     return data_folder
+
+
+def get_package_folder(my_object: Any = None) -> pathlib.Path:
+    """
+    The path to the package folder where the my_object is declared.
+
+    The package folder is defined as the highest folder in the folder structure
+    containing an __init__.py file.
+    If the package has been bundled in a .exe file, returns the application folder.
+    The my_object can be anything : a class, a variable, a function...
+
+    """
+    if _is_application_frozen():
+        package_path = _get_frozen_package_path()
+    else:
+        package_path = _get_unfrozen_package_path(my_object)
+    return package_path
+
+
+def _is_application_frozen() -> bool:
+    return getattr(sys, "frozen", False)
+
+
+def _get_frozen_package_path() -> pathlib.Path:
+    exe_path = pathlib.Path(sys.executable)
+    package_path = exe_path.parent
+    return package_path
+
+
+def _get_unfrozen_package_path(my_object: Any) -> pathlib.Path:
+    if my_object is None:
+        package_path = _get_package_folder_from_caller()
+    else:
+        package_path = _get_my_object_file(my_object)
+    while _is_parent_a_package(package_path):
+        package_path = package_path.parent
+    return package_path
+
+
+def _get_package_folder_from_caller():
+    index = 0
+    caller = inspect.stack()[index].filename
+    while caller == __file__:
+        index += 1
+        caller = inspect.stack()[index].filename
+    return pathlib.Path(caller)
+
+
+def _is_parent_a_package(package_path: pathlib.Path) -> bool:
+    parent_path = package_path.parent
+    init_file = parent_path / "__init__.py"
+    return init_file.exists()
+
+
+def _get_my_object_file(my_object: Any) -> pathlib.Path:
+    my_object_module = inspect.getmodule(my_object)
+    assert my_object_module is not None
+    my_object_file = my_object_module.__file__
+    my_object_file_path = pathlib.Path(my_object_file)
+    package_path = my_object_file_path.parent
+    return package_path

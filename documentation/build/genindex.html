@@ -81,6 +81,8 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">utils</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="utils.config.html">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.config_database.html">config_database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.config_toml.html">config_toml</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.functions.html">functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.my_custom_widget.html">my_custom_widget</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.my_types.html">my_types</a></li>
@@ -153,30 +155,32 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#A"><strong>A</strong></a>
- | <a href="#C"><strong>C</strong></a>
+ <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#S"><strong>S</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
  
 </div>
-<h2 id="A">A</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="utils.config.html#utils.config.Config.add_regular_attributes">add_regular_attributes() (Config method)</a>
-</li>
-  </ul></td>
-</tr></table>
-
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="utils.config.html#utils.config.Config">Config (class in utils.config)</a>
 </li>
+      <li><a href="utils.my_custom_widget.html#utils.my_custom_widget.MyCustomWidget.config">config (MyCustomWidget attribute)</a>
+</li>
+      <li><a href="utils.config_database.html#utils.config_database.ConfigDatabase">ConfigDatabase (class in utils.config_database)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="utils.my_custom_widget.html#utils.my_custom_widget.MyCustomWidget.config">config (MyCustomWidget attribute)</a>
+      <li><a href="utils.config_toml.html#utils.config_toml.ConfigToml">ConfigToml (class in utils.config_toml)</a>
+</li>
+      <li><a href="utils.config.html#utils.config.Config.create">create() (Config static method)</a>
 </li>
       <li><a href="utils.my_custom_widget.html#utils.my_custom_widget.MyCustomWidget.create_widget">create_widget() (MyCustomWidget class method)</a>
 </li>
@@ -185,6 +189,10 @@
 
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="utils.config_database.html#utils.config_database.Parameter.description">description (Parameter attribute)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="utils.my_custom_widget.html#utils.my_custom_widget.MyCustomWidget.display_msg_box">display_msg_box() (MyCustomWidget static method)</a>
 </li>
@@ -198,20 +206,34 @@
 </li>
       <li><a href="utils.functions.html#utils.functions.get_data_folder">get_data_folder() (in module utils.functions)</a>
 </li>
+      <li><a href="utils.config_database.html#utils.config_database.ConfigDatabase.get_database">get_database() (ConfigDatabase method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="utils.my_custom_widget.html#utils.my_custom_widget.MyCustomWidget.get_main_window">get_main_window() (MyCustomWidget method)</a>
 </li>
       <li><a href="utils.functions.html#utils.functions.get_package_folder">get_package_folder() (in module utils.functions)</a>
 </li>
+      <li><a href="utils.config_database.html#utils.config_database.Parameter.group">group (Parameter attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="utils.config_database.html#utils.config_database.ConfigDatabase.load">load() (ConfigDatabase method)</a>
+
+      <ul>
+        <li><a href="utils.config_toml.html#utils.config_toml.ConfigToml.load">(ConfigToml method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="utils.config.html#utils.config.MetaConfig">MetaConfig (class in utils.config)</a>
-</li>
       <li>
     module
 
@@ -219,6 +241,10 @@
         <li><a href="utils.html#module-utils">utils</a>
 </li>
         <li><a href="utils.config.html#module-utils.config">utils.config</a>
+</li>
+        <li><a href="utils.config_database.html#module-utils.config_database">utils.config_database</a>
+</li>
+        <li><a href="utils.config_toml.html#module-utils.config_toml">utils.config_toml</a>
 </li>
         <li><a href="utils.functions.html#module-utils.functions">utils.functions</a>
 </li>
@@ -231,6 +257,34 @@
 </li>
       <li><a href="utils.my_custom_widget.html#utils.my_custom_widget.MyCustomWidgetMixin">MyCustomWidgetMixin (class in utils.my_custom_widget)</a>
 </li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="utils.config_database.html#utils.config_database.Parameter.name">name (Parameter attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="utils.config_database.html#utils.config_database.Parameter">Parameter (class in utils.config_database)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="utils.config_database.html#utils.config_database.ConfigDatabase.save">save() (ConfigDatabase method)</a>
+
+      <ul>
+        <li><a href="utils.config_toml.html#utils.config_toml.ConfigToml.save">(ConfigToml method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -256,13 +310,27 @@
         <li><a href="utils.html#module-utils">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     utils.config
 
       <ul>
         <li><a href="utils.config.html#module-utils.config">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    utils.config_database
+
+      <ul>
+        <li><a href="utils.config_database.html#module-utils.config_database">module</a>
+</li>
+      </ul></li>
+      <li>
+    utils.config_toml
+
+      <ul>
+        <li><a href="utils.config_toml.html#module-utils.config_toml">module</a>
 </li>
       </ul></li>
       <li>
@@ -279,6 +347,14 @@
         <li><a href="utils.my_custom_widget.html#module-utils.my_custom_widget">module</a>
 </li>
       </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="utils.config_database.html#utils.config_database.Parameter.value">value (Parameter attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 

@@ -16,32 +16,13 @@ from typing import Any
 
 def get_data_folder(my_object: Any = None) -> pathlib.Path:
     """
-    The path to the data folder for the package where my_object is declared.
+    The path to the data folder for my_object.
 
-    If the package has been bundled in a .exe file, returns the data folder of the
-    application folder.
-    The my_object can be anything : a class, a variable, a function...
-
-    Warnings
-    --------
-    There is a strong assumption made here about where this data folder has to be. In
-    the frozen case, we are looking for a sub-folder named "data" inside the folder
-    where the .exe file is located. In the unfrozen case, it is assumed that all
-    package and sub-package have an __init__.py file. The data folder must be a
-    sibling to the highest level folder containing an __init__.py file.
-    package
-        . data
-        . source_code
-            . __init__.py
-            . app.py
-            . sub-package 1
-                . __init__.py
-                . module 1.1
-                . module 1.2
-            . sub-package 2
-                . __init__.py
-                . module 2.1
-        etc...
+    The data folder is defined as a "sibling" folder (named "data") to the package
+    folder where my_object is defined. More information is available in the
+    get_package_folder documentation.
+    If no my_object is passed, returns the data folder for the package from where
+    the function is called.
 
     """
     package_folder = get_package_folder(my_object)
@@ -55,14 +36,43 @@ def get_data_folder(my_object: Any = None) -> pathlib.Path:
 
 def get_package_folder(my_object: Any = None) -> pathlib.Path:
     """
-    The path to the package folder where the my_object is declared.
+    The path to the package folder from where the function is called, or where
+    my_object is declared.
 
-    The package folder is defined as the highest folder in the folder structure
-    containing an __init__.py file.
-    If the package has been bundled in a .exe file, returns the application folder.
-    The my_object can be anything : a class, a variable, a function...
+    If the package has been bundled in a .exe file, returns the data folder of the
+    application itself. Otherwise, the package folder is defined as the highest folder
+    in the folder structure containing an __init__.py file.
 
+    Parameters
+    ----------
+    my_object
+        If needed, one can pass as an argument an object defined in an imported module
+        or package. The package folder returned will then be the one from the package
+        where my_object is defined, which will be different to the one from where the
+        function is called.
+        my_object can be anything : a class, a variable, a function...
+
+    Warnings
+    --------
+    There is a strong assumption about the code structure. In the unfrozen case, it is
+    assumed that all package and sub-package have an __init__.py file.
+
+    - package
+        - data
+        - source_code
+            - __init__.py
+            - app.py
+            - sub-package 1
+               - __init__.py
+               - module 1.1
+               - module 1.2
+            - sub-package 2
+               - __init__.py
+               - module 2.1
+
+    In this example, the package folder is "source_code".
     """
+
     if _is_application_frozen():
         package_path = _get_frozen_package_path()
     else:

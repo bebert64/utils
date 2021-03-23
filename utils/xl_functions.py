@@ -228,6 +228,11 @@ class MyRange(xlwings.Range):
         headers = self.get_headers()
         assert headers is not None
         header, values = my_filter
+        if header not in headers:
+            raise ValueError(
+                f"The header '{header}' has not been found in the range's headers "
+                f"({headers})."
+            )
         column_index = headers.index(header)
         for xlwings_row in self.rows:
             cell_filtered = xlwings_row[column_index]
@@ -349,6 +354,6 @@ class DataTable:
 # sheet = my_workbook.sheets[0]
 # used_range = sheet.used_range
 # MyRange.cast(used_range)
-# my_filter = ("12", [92, 72, 42])
-# print(used_range.get_data_table(headers=["11", "12"]).rows)
+# my_filter = ("11", [92, 72, 42])
+# print(used_range.get_data_table(headers=["11", "12", "a"]).rows)
 # print(used_range.get_data_table(headers=["11", "12"], my_filter=my_filter).rows)

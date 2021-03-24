@@ -16,7 +16,6 @@ from typing import Optional, Type, TypeVar
 from PySide6 import QtCore, QtUiTools, QtWidgets
 
 from utils.functions import get_data_folder
-from utils.config import Config
 
 MyType = TypeVar("MyType")
 
@@ -76,9 +75,7 @@ class MyCustomWidget:
     A convenience class to create QT object from .ui files.
 
     MyCustomWidget is meant to be inherited, and cannot be used by itself. The derived
-    class must also inherit from a QtWidgets.QWidget. When a widget is created with
-    create_widget, if its parent has the attribute MyTag, it will be passe to
-    the widget, along MyObject and MyObjectTag.
+    class must also inherit from a QtWidgets.QWidget.
 
     Class Attributes
     ----------------
@@ -108,11 +105,9 @@ class MyCustomWidget:
     ui_folder_path: Path
     """
     The path to the folder in which to find the .ui files. If not provided by the
-    derived class, the "ui_files" sub-folder of the folder where the class is being
-    defined will be used.
+    derived class, the "ui_files" sub-folder of the data folder for the package where
+    the class is defined will be used.
     """
-
-    config: Optional[Config]
 
     @classmethod
     def create_widget(
@@ -142,8 +137,6 @@ class MyCustomWidget:
         widget = cls._create_widget_using_loader(parent)
         assert isinstance(widget, cls)
         assert isinstance(widget, QtWidgets.QWidget)
-        if widget._has_parent():
-            widget._copy_attribute_from_parent("config")
         return widget
 
     def _has_parent(self):
@@ -259,10 +252,6 @@ class MyCustomWidget:
         msg_box.setWindowTitle(title)
         msg_box.setText(msg)
         msg_box.exec_()
-
-
-# class MyCustomWidgetMixin(QtWidgets.QWidget, MyCustomWidget):
-#     """Class defined only for type checking the return value of create_widget."""
 
 
 #     def set_msg_box_message(self, msg: str):

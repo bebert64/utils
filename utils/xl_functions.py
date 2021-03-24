@@ -71,9 +71,28 @@ def _open_workbook(path: Path) -> xlwings.Book:
 
 
 class MyRange(xlwings.Range):
+
+    """
+    Extension of xlwings.Range class.
+
+    The main point of extending the class is the link with the DataTable class, that
+    represents the data itself found in the range, allowing for easier manipulation.
+
+    Attributes
+    __________
+    has_headers
+        Indicates whether the first line contains headers or data.
+
+    Warnings
+    --------
+    This class should not be instantiated directly. Instead, one should start from
+    an xlwings.Range object and use the MyRange.cast method.
+
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(args, **kwargs)
-        self.has_headers = True
+        self.has_headers: bool = True
 
     @staticmethod
     def cast(my_range: xlwings.Range, has_headers: bool = True) -> None:
@@ -173,25 +192,57 @@ class MyRange(xlwings.Range):
         table.Sort.MatchCase = False
         table.Sort.Apply()
 
+    def get_data_row(
+        self, xlwings_row: xlwings.RangeRows, headers: Headers = None
+    ) -> DataRow:
+        """
+        A dictionary containing the row values.
+
+        It is possible to filter on the columns to be included, both via the
+        cols_included, ot the translation argument (more details provided in the
+        Parameters section). If both arguments are provided, ValueError will be
+        raised.
+
+        Parameters
+        ----------
+        xlwings_row
+            The number of the row which values we want.
+        headers
+            List of columns to be included in the results. Default is None, in
+            which case all columns will be included.
+        Returns
+        -------
+            A dictionary, which keys are the table header and which values
+            are the ones found in the row.
+        """
+        headers_data_row, headers_range = self._check_headers(headers)
+        data_row = {}
+        for header in headers_data_row:
+            column_index = headers_range.index(header)
+            data_row[header] = xlwings_row[column_index].value
+        return data_row
+
     def get_data_table(
         self, headers: Headers = None, my_filter: ColumnFilter = None
     ) -> DataTable:
-        self._check_headers(headers)
-        if headers is None:
-            headers = self.get_headers()
-        assert headers is not None
-        data_table = DataTable(headers)
+        headers_data_row, _ = self._check_headers(headers)
+        data_table = DataTable()
         rows_filtered = self._rows_filtered(my_filter)
         for xlwings_row in rows_filtered:
-            data_row = self.get_data_row(xlwings_row, headers=headers)
+            data_row = self.get_data_row(xlwings_row, headers=headers_data_row)
             data_table.add_row(data_row)
         return data_table
 
     def _check_headers(self, headers):
         if not self.has_headers:
             self._check_headers_length(headers)
+            headers_data_row = headers
+            range_headers = headers
         else:
             self._check_headers_subset(headers)
+            headers_data_row = headers
+            range_headers = self.get_headers()
+        return headers_data_row, range_headers
 
     def _check_headers_subset(self, headers):
         headers_set = set(headers)
@@ -238,43 +289,6 @@ class MyRange(xlwings.Range):
             cell_filtered = xlwings_row[column_index]
             if cell_filtered.value in values:
                 yield xlwings_row
-
-    def get_data_row(
-        self, xlwings_row: xlwings.RangeRows, headers: Headers = None
-    ) -> DataRow:
-        """
-        A dictionary containing the row values.
-
-        It is possible to filter on the columns to be included, both via the
-        cols_included, ot the translation argument (more details provided in the
-        Parameters section). If both arguments are provided, ValueError will be
-        raised.
-
-        Parameters
-        ----------
-        xlwings_row
-            The number of the row which values we want.
-        headers
-            List of columns to be included in the results. Default is None, in
-            which case all columns will be included.
-        Returns
-        -------
-            A dictionary, which keys are the table header and which values
-            are the ones found in the row.
-        """
-        self._check_headers(headers)
-        if headers is None:
-            headers = self.get_headers()
-        assert headers is not None
-        range_headers = self.get_headers() if self.has_headers else headers
-        assert range_headers is not None
-        data_row = {}
-        if headers is None:
-            headers = range_headers
-        for header in headers:
-            column_index = range_headers.index(header)
-            data_row[header] = xlwings_row[column_index].value
-        return data_row
 
 
 class DataTable:

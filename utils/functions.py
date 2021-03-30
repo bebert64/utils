@@ -11,7 +11,7 @@ Defines :
 import inspect
 import pathlib
 import sys
-from typing import Any
+from typing import Any, Optional, TypeVar
 
 
 def get_data_folder(my_object: Any = None) -> pathlib.Path:
@@ -122,3 +122,19 @@ def _get_my_object_file(my_object: Any) -> pathlib.Path:
     my_object_file_path = pathlib.Path(my_object_file)
     package_path = my_object_file_path.parent
     return package_path
+
+
+MyType = TypeVar("MyType")
+ComparedVal = Optional[MyType]
+
+
+def max_with_none(*args: ComparedVal) -> ComparedVal:
+    """Returns the max of two value, considering that None is always inferior."""
+    list_without_none = [value for value in args if value is not None]
+    return max(list_without_none)
+
+
+def min_with_none(*args: ComparedVal) -> ComparedVal:
+    """Returns the min of two value, considering that None is always inferior."""
+    list_without_none = [value for value in args if value is not None]
+    return min(list_without_none)

@@ -10,63 +10,63 @@ Defines :
 from __future__ import annotations
 
 import re
+from functools import wraps
 from pathlib import Path
 from typing import Optional, Type, TypeVar
 
 from PySide6 import QtCore, QtUiTools, QtWidgets
-
 from utils.functions import get_data_folder
 
 MyType = TypeVar("MyType")
 
 
-# class MyThread(QtCore.QThread):
-#
-#     """
-#     A QThread executing a function and capable of updating a message box.
-#
-#     Parameters
-#     ----------
-#     parent: Union[ShortCutsChild, MainWindow]
-#         The parent object, which might itself be a ShortCutsChild, or the
-#         first ancestor, which has to be the Main Window.
-#     func: Callable
-#         The function meant to be run in the separate thread.
-#         args
-#     *args: Any
-#         Variable length argument list, required to run the function.
-#     **kwargs: Any
-#         Arbitrary keyword arguments, required to run the function.
-#     """
-#
-#     update_message: QtCore.Signal = QtCore.Signal(str)
-#     """
-#     A signal sent to update the message in the associated message box.
-#     """
-#
-#     update_title: QtCore.Signal = QtCore.Signal(str)
-#     """
-#     A signal sent to update the title of the associated message box.
-#     """
-#
-#     finished: QtCore.Signal = QtCore.Signal()
-#     """
-#     A signal sent when the function has finished running.
-#     """
-#
-#     def __init__(self, parent, func, *args, **kwargs):
-#         super().__init__()
-#         self.parent = parent
-#         self.func = func
-#         self.args = args
-#         self.kwargs = kwargs
-#
-#     def run(self):
-#         """
-#         Executes the function and signals the end.
-#         """
-#         self.func(self.parent, *self.args, **self.kwargs)
-#         self.finished.emit()
+class MyThread(QtCore.QThread):
+
+    """
+    A QThread executing a function and capable of updating a message box.
+
+    Parameters
+    ----------
+    parent: Union[ShortCutsChild, MainWindow]
+        The parent object, which might itself be a ShortCutsChild, or the
+        first ancestor, which has to be the Main Window.
+    func: Callable
+        The function meant to be run in the separate thread.
+        args
+    *args: Any
+        Variable length argument list, required to run the function.
+    **kwargs: Any
+        Arbitrary keyword arguments, required to run the function.
+    """
+
+    update_message: QtCore.Signal = QtCore.Signal(str)
+    """
+    A signal sent to update the message in the associated message box.
+    """
+
+    update_title: QtCore.Signal = QtCore.Signal(str)
+    """
+    A signal sent to update the title of the associated message box.
+    """
+
+    finished: QtCore.Signal = QtCore.Signal()
+    """
+    A signal sent when the function has finished running.
+    """
+
+    def __init__(self, parent, func, *args, **kwargs):
+        super().__init__()
+        self.parent = parent
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
+
+    def run(self):
+        """
+        Executes the function and signals the end.
+        """
+        self.func(self.parent, *self.args, **self.kwargs)
+        self.finished.emit()
 
 
 class MyCustomWidget:
@@ -81,14 +81,18 @@ class MyCustomWidget:
     ----------------
     ui_file_name
     ui_folder_path
-    MyTag
-    MyObject
-    MyObjectTag
-    config_gallery
 
     Class Methods
     -------------
     create_widget
+
+    """
+
+    _additional_docstring: str = """
+    Warning
+    -------
+    This widget should not be instantiated directly, but rather through the factory
+    method create_my_main_window.
 
     """
 
@@ -108,6 +112,11 @@ class MyCustomWidget:
     derived class, the "ui_files" sub-folder of the data folder for the package where
     the class is defined will be used.
     """
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.thread = None
+        self.msg_box = None
 
     @classmethod
     def create_widget(
@@ -142,8 +151,7 @@ class MyCustomWidget:
     def _has_parent(self):
         assert isinstance(self, QtWidgets.QWidget)
         parent = self.parent()  # pylint: disable=no-member
-        has_parent = parent is not None
-        return has_parent
+        return parent is not None
 
     @classmethod
     def _create_widget_using_loader(
@@ -253,67 +261,67 @@ class MyCustomWidget:
         msg_box.setText(msg)
         msg_box.exec_()
 
+    def set_msg_box_message(self, msg: str):
+        self.thread.update_message.emit(msg)
 
-#     def set_msg_box_message(self, msg: str):
-#         if self.thread is None:
-#             self._shortcuts_parent.thread.update_message.emit(msg)
-#             return
-#         self.thread.update_message.emit(msg)
-#
-#     def set_msg_box_title(self, title: str):
-#         self.thread.update_title.emit(title)
-#
-#     def handle_thread_finished(self):
-#         """
-#         Changes the button of the message box to OK.
-#
-#         The behaviour of the button also changes, from terminating the
-#         running thread to simply closing the message box.
-#         """
-#         self.msg_box.pushButton.setText("OK")
-#         self.msg_box.pushButton.clicked.connect(self.msg_box.close)
-#
-#     def cancel_thread(self):
-#         """
-#         Cancels the thread and closes the message box.
-#         """
-#         self.thread.terminate()
-#         self.msg_box.close()
-#
-#
-# class MyMsgBox(QtWidgets.QDialog, MyCustomWidget):
-#
-#     """
-#     A simple message box.
-#     """
-#
-#     ui_file_name = "my_msg_box.ui"
-#     ui_folder_path = Path(__file__).parent
-#
-#     def __init__(self):
-#         super().__init__()
-#         self.setupUi(self)
-#         self.setWindowFlags(QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
-#
-#
-# def display_info_while_running(func):
-#     """
-#     Executes the function in a separate thread and displays information
-#     in a message box.
-#     """
-#
-#     @wraps(func)
-#     def wrapper(self, *args, **kwargs):
-#         """
-#         Wrapper for the function.
-#         """
-#         self.msg_box = MyMsgBox()
-#         self.thread = MyThread(self, func, *args, **kwargs)
-#         self.thread.update_message.connect(self.msg_box.label.setText)
-#         self.thread.update_title.connect(self.msg_box.setWindowTitle)
-#         self.thread.finished.connect(self.msg_box_finished)
-#         self.msg_box.pushButton.clicked.connect(self.cancel_thread)
-#         self.thread.start()
-#         self.msg_box.exec_()
-#
-#     return wrapper
+    def set_msg_box_title(self, title: str):
+        self.thread.update_title.emit(title)
+
+    def handle_thread_finished(self):
+        """
+        Changes the button of the message box to OK.
+
+        The behaviour of the button also changes, from terminating the
+        running thread to simply closing the message box.
+        """
+        self.msg_box.pushButton.setText("OK")
+        self.msg_box.pushButton.clicked.connect(self.msg_box.close)
+
+    def _cancel_thread(self):
+        """
+        Cancels the thread and closes the message box.
+        """
+        self.thread.terminate()
+        self.msg_box.close()
+
+
+class MyMsgBox(QtWidgets.QDialog, MyCustomWidget):
+
+    """
+    A simple message box.
+    """
+
+    @classmethod
+    def create_msg_box(
+        cls, parent: Optional[QtWidgets.QWidget] = None
+    ) -> MyCustomWidget:
+        msg_box = cls.create_widget(parent)
+        msg_box.setWindowFlags(
+            QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint
+        )
+        return msg_box
+
+
+def display_info_while_running(func):
+    """
+    Decorator to facilitate the use of threading and displaying information.
+
+    Executes the function in a separate thread and displays information about the
+    execution status (or anything else) in a message box.
+    """
+
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        """
+        Wrapper for the function.
+        """
+        self.msg_box = MyMsgBox.create_msg_box()
+        self.thread = MyThread(self, func, *args, **kwargs)
+        self.thread.update_message.connect(self.msg_box.label.setText)
+        self.thread.update_title.connect(self.msg_box.setWindowTitle)
+        self.thread.finished.connect(self.handle_thread_finished)
+        self.msg_box.pushButton.clicked.connect(self._cancel_thread)
+        self.thread.start()
+        self.msg_box.exec_()
+
+    return wrapper

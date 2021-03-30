@@ -26,8 +26,6 @@ Defines types commonly used.
 
 from typing import Union, Dict, Tuple, List
 
-import xlwings
-
 Row = int
 Column = int
 CellValue = Union[int, str, None]
@@ -35,7 +33,4 @@ Header = str
 Headers = List[Header]
 ColumnFilter = Tuple[Header, List[CellValue]]
 DataRow = Dict[Header, CellValue]
-ExcelTable = (
-    xlwings._xlwindows.COMRetryObjectWrapper  # pylint: disable=protected-access
-)
 Pixel = int

@@ -1,8 +1,1 @@
-MyCustomWidget
-    Réactiver les Threads, et l'affichage de donneés au fur et à mesure de l'exécution
-    
-xl_functions
-    Revoir le order_table
-    Revoir la gestion des headers 
-        => si je veux le rendre obligatoire, le faire à la création
-        => sinon, gérer tous les cas où ça peut poser problème qu'il n'y en ait pas
+

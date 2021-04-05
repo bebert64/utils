@@ -1,0 +1,6 @@
+/build/
+/dist/
+/documentation/
+/.idea/
+build_doc.bat
+create_toc.bat

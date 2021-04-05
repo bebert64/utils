@@ -11,8 +11,6 @@ Defines types commonly used.
 
  DataRow: Dict[str, CellValue]. A row of data in an Excel table
 
- ExcelTable: the "real" Excel object, returned by the Win32 api.
-
  ColumnFilter: a tuple of a column number and a list of CellValue
 
  Header: str

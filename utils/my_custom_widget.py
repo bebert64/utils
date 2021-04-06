@@ -12,7 +12,7 @@ from __future__ import annotations
 import re
 from functools import wraps
 from pathlib import Path
-from typing import Optional, Type, TypeVar
+from typing import Optional, Type, TypeVar, Callable, Any
 
 from PySide6 import QtCore, QtUiTools, QtWidgets
 from utils.functions import get_data_folder
@@ -27,7 +27,7 @@ class MyThread(QtCore.QThread):
 
     Parameters
     ----------
-    parent: Union[ShortCutsChild, MainWindow]
+    parent: QtWidgets.QWidget
         The parent object, which might itself be a ShortCutsChild, or the
         first ancestor, which has to be the Main Window.
     func: Callable
@@ -54,19 +54,20 @@ class MyThread(QtCore.QThread):
     A signal sent when the function has finished running.
     """
 
-    def __init__(self, parent, func, *args, **kwargs):
-        super().__init__()
-        self.parent = parent
+    def __init__(
+        self, parent: QtWidgets.QWidget, func: Callable, *args: Any, **kwargs: Any
+    ) -> None:
+        super().__init__(parent)
         self.func = func
         self.args = args
         self.kwargs = kwargs
 
-    def run(self):
+    def run(self) -> None:
         """
         Executes the function and signals the end.
         """
-        self.func(self.parent, *self.args, **self.kwargs)
-        self.finished.emit()
+        self.func(self.parent(), *self.args, **self.kwargs)
+        self.finished.emit()  # type: ignore
 
 
 class MyCustomWidget:
@@ -113,33 +114,15 @@ class MyCustomWidget:
     the class is defined will be used.
     """
 
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.thread = None
-        self.msg_box = None
+    def __init__(self) -> None:
+        self.my_thread: Optional[MyThread] = None
+        self.msg_box: Optional[MyMsgBox] = None
 
     @classmethod
     def create_widget(
         cls, parent: Optional[QtWidgets.QWidget] = None
     ) -> MyCustomWidget:
-        """
-        Creates a widget based on the .ui file ui_file_name.
-
-        If arguments need to be passed when constructing the derived class, the good
-        practice is to define a create_specific_widget in the derived class, itself
-        classing super().create_widget()
-
-        Parameters
-        ----------
-        parent
-
-        Returns
-        -------
-        MyCustomWidgetMixin
-            The widget created based on the .ui file, derived from both MyCustomWidget
-            and QtWidgets.QWidget.
-
-        """
+        """Factory method to create a MyCustomWidget."""
         # create_widget is (part of) a factory method, and should therefore be allowed
         # to access protected members of the class.
         # pylint: disable=protected-access
@@ -148,7 +131,7 @@ class MyCustomWidget:
         assert isinstance(widget, QtWidgets.QWidget)
         return widget
 
-    def _has_parent(self):
+    def _has_parent(self) -> bool:
         assert isinstance(self, QtWidgets.QWidget)
         parent = self.parent()  # pylint: disable=no-member
         return parent is not None
@@ -261,27 +244,52 @@ class MyCustomWidget:
         msg_box.setText(msg)
         msg_box.exec_()
 
-    def set_msg_box_message(self, msg: str):
-        self.thread.update_message.emit(msg)
+    def set_msg_box_message(self, msg: str) -> None:
+        """
+        Sets the title of the message box linked to the thread.
 
-    def set_msg_box_title(self, title: str):
-        self.thread.update_title.emit(title)
+        Warning
+        -------
+        This methods needs the my_thread and my_msg_box attributes of the widget
+        to hve been initialized, and should only be used inside a method wrapped
+        with display_info_while_running.
 
-    def handle_thread_finished(self):
+        """
+        if self.my_thread is not None:
+            self.my_thread.update_message.emit(msg)  # type: ignore
+
+    def set_msg_box_title(self, title: str) -> None:
+        """
+        Sets the message inside of the message box linked to the thread.
+
+        Warning
+        -------
+        This methods needs the my_thread and my_msg_box attributes of the widget
+        to hve been initialized, and should only be used inside a method wrapped
+        with display_info_while_running.
+
+        """
+        if self.my_thread is not None:
+            self.my_thread.update_title.emit(title)  # type: ignore
+
+    def handle_thread_finished(self) -> None:
         """
         Changes the button of the message box to OK.
 
         The behaviour of the button also changes, from terminating the
         running thread to simply closing the message box.
         """
+        assert self.msg_box is not None
         self.msg_box.pushButton.setText("OK")
         self.msg_box.pushButton.clicked.connect(self.msg_box.close)
 
-    def _cancel_thread(self):
+    def cancel_thread(self) -> None:
         """
         Cancels the thread and closes the message box.
         """
-        self.thread.terminate()
+        assert self.my_thread is not None
+        assert self.msg_box is not None
+        self.my_thread.terminate()
         self.msg_box.close()
 
 
@@ -289,20 +297,26 @@ class MyMsgBox(QtWidgets.QDialog, MyCustomWidget):
 
     """
     A simple message box.
+
+    Warning
+    -------
+    This widget should not be instantiated directly, but rather through the
+    factory method create_msg_box.
+
     """
 
     @classmethod
-    def create_msg_box(
-        cls, parent: Optional[QtWidgets.QWidget] = None
-    ) -> MyCustomWidget:
-        msg_box = cls.create_widget(parent)
-        msg_box.setWindowFlags(
+    def create_msg_box(cls) -> MyCustomWidget:
+        """Factory method to create a MyMsgBox. """
+        msg_box = cls.create_widget()
+        assert isinstance(msg_box, QtWidgets.QDialog)
+        msg_box.setWindowFlags(  # type: ignore
             QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint
         )
         return msg_box
 
 
-def display_info_while_running(func):
+def display_info_while_running(func: Callable) -> Callable:
     """
     Decorator to facilitate the use of threading and displaying information.
 
@@ -311,17 +325,17 @@ def display_info_while_running(func):
     """
 
     @wraps(func)
-    def wrapper(self, *args, **kwargs):
+    def wrapper(self: Any, *args: Any, **kwargs: Any) -> None:
         """
         Wrapper for the function.
         """
         self.msg_box = MyMsgBox.create_msg_box()
-        self.thread = MyThread(self, func, *args, **kwargs)
-        self.thread.update_message.connect(self.msg_box.label.setText)
-        self.thread.update_title.connect(self.msg_box.setWindowTitle)
-        self.thread.finished.connect(self.handle_thread_finished)
-        self.msg_box.pushButton.clicked.connect(self._cancel_thread)
-        self.thread.start()
+        self.my_thread = MyThread(self, func, *args, **kwargs)
+        self.my_thread.update_message.connect(self.msg_box.label.setText)  # type: ignore
+        self.my_thread.update_title.connect(self.msg_box.setWindowTitle)  # type: ignore
+        self.my_thread.finished.connect(self.handle_thread_finished)  # type: ignore
+        self.msg_box.pushButton.clicked.connect(self.cancel_thread)
+        self.my_thread.start()
         self.msg_box.exec_()
 
     return wrapper

@@ -8,8 +8,7 @@ Defines :
 from typing import List
 
 import toml
-
-from utils.config import Config
+from utils.config import Config, ParameterValue
 
 
 class ConfigToml(Config):
@@ -59,13 +58,13 @@ class _TomlWriter:
         self._transform_existing_lines()
         self._add_new_lines()
 
-    def _transform_existing_lines(self):
+    def _transform_existing_lines(self) -> None:
         with open(self.config_toml.config_file, "r") as toml_file:
             for line in toml_file.readlines():
                 new_line = self._transform_line(line)
                 self.new_content += new_line
 
-    def _transform_line(self, line):
+    def _transform_line(self, line: str) -> str:
         key = line.split(" ")[0]
         try:
             value = self.data[key]
@@ -76,7 +75,7 @@ class _TomlWriter:
             self.parameters_saved.append(key)
         return new_line
 
-    def _add_new_lines(self):
+    def _add_new_lines(self) -> None:
         for key in [
             key for key in self.data.keys() if key not in self.parameters_saved
         ]:
@@ -84,16 +83,16 @@ class _TomlWriter:
             new_line = self._translate_value_toml(key, value)
             self.new_content += new_line
 
-    def _translate_value_toml(self, key, value):
+    def _translate_value_toml(self, key: str, value: ParameterValue) -> str:
         value = self.config_toml.translate_value(value)
         toml_single_value_dict = {key: value}
         new_line = toml.dumps(toml_single_value_dict)
         return new_line
 
-    def _write(self):
+    def _write(self) -> None:
         with open(self.config_toml.config_file, "w") as toml_file:
             toml_file.write(self.new_content)
 
-    def _reset(self):
+    def _reset(self) -> None:
         self.new_content = ""
         self.parameters_saved = []

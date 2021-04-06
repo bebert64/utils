@@ -100,7 +100,7 @@ def _get_unfrozen_package_path(my_object: Any) -> pathlib.Path:
     return package_path
 
 
-def _get_package_folder_from_caller():
+def _get_package_folder_from_caller() -> pathlib.Path:
     index = 0
     caller = inspect.stack()[index].filename
     while caller == __file__:

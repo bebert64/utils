@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Optional, Type, TypeVar, Callable, Any
 
 from PySide6 import QtCore, QtUiTools, QtWidgets
+
 from utils.functions import get_data_folder
 
 MyType = TypeVar("MyType")
@@ -151,7 +152,7 @@ class MyCustomWidget:
         parent: Optional[QtWidgets.QWidget],
         ui_file: QtCore.QFile,
     ) -> QtWidgets.QWidget:
-        ui_file.open(QtCore.QFile.ReadOnly)  # type: ignore
+        ui_file.open(QtCore.QFile.ReadOnly)
         widget = loader.load(ui_file, parent)
         ui_file.close()
         return widget
@@ -310,7 +311,7 @@ class MyMsgBox(QtWidgets.QDialog, MyCustomWidget):
         """Factory method to create a MyMsgBox. """
         msg_box = cls.create_widget()
         assert isinstance(msg_box, QtWidgets.QDialog)
-        msg_box.setWindowFlags(  # type: ignore
+        msg_box.setWindowFlags(
             QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint
         )
         return msg_box

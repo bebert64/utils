@@ -81,7 +81,8 @@ def get_package_folder(my_object: Any = None) -> pathlib.Path:
 
 
 def _is_application_frozen() -> bool:
-    return getattr(sys, "frozen", False)
+    is_application_frozen: bool = getattr(sys, "frozen", False)
+    return is_application_frozen
 
 
 def _get_frozen_package_path() -> pathlib.Path:

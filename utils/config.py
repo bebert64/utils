@@ -12,7 +12,7 @@ from __future__ import annotations
 import pathlib
 from typing import Dict, Optional, Union, Any
 
-ParameterValue = Union[int, str]
+ParameterValue = Union[int, str, pathlib.Path]
 Parameters = Dict[str, ParameterValue]
 
 

@@ -115,9 +115,9 @@ class MyCustomWidget:
     the class is defined will be used.
     """
 
-    def __init__(self) -> None:
-        self.my_thread: Optional[MyThread] = None
-        self.msg_box: Optional[MyMsgBox] = None
+    # def __init__(self) -> None:
+    #     self.my_thread: Optional[MyThread] = None
+    #     self.msg_box: Optional[MyMsgBox] = None
 
     @classmethod
     def create_widget(

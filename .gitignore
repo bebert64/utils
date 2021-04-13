@@ -2,5 +2,6 @@
 /dist/
 /documentation/
 /.idea/
+/*.egg-info/
 build_doc.bat
 create_toc.bat
